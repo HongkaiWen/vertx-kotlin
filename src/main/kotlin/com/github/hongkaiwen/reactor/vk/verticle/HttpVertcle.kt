@@ -24,9 +24,8 @@ class HttpVertcle : AbstractVerticle() {
 
   val counter: (RoutingContext) -> Unit = {
     var name = it.request().getParam("name")
-    var current = counterData.get(name) ?: 0
-    current ++
-    counterData.put(name, current)
+    var current = (counterData[name] ?: 0) + 1
+    counterData[name] = current
     it.request().response().end("counter")
   }
 
