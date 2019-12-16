@@ -12,6 +12,7 @@ import io.vertx.ext.web.RoutingContext
 class HttpVerticle : AbstractVerticle() {
 
     override fun start(promise: Promise<Void>) {
+        println(promise)
         var server = vertx.createHttpServer()
         var router = Router.router(vertx)
         server.requestHandler(router)

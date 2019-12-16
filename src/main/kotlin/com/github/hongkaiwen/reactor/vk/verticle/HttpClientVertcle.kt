@@ -1,10 +1,20 @@
 package com.github.hongkaiwen.reactor.vk.verticle
 
 import io.vertx.core.AbstractVerticle
+import io.vertx.core.Context
 import io.vertx.core.Promise
+import io.vertx.core.Vertx
 import io.vertx.core.eventbus.Message
+import io.vertx.ext.web.client.WebClient
 
 class HttpClientVertcle : AbstractVerticle() {
+
+    lateinit var webClient: WebClient
+
+    override fun init(vertx: Vertx?, context: Context?) {
+        super.init(vertx, context)
+        webClient = WebClient.create(vertx)
+    }
 
     override fun start(startPromise: Promise<Void>?) {
         var eb = vertx.eventBus()
@@ -15,12 +25,14 @@ class HttpClientVertcle : AbstractVerticle() {
     }
 
     fun sendHttpRequest(a: Int, msg: Message<Int>) {
-        var client = vertx.createHttpClient()
-        client.get(8888, "localhost", "/calc?i=$a").handler { response ->
-            response.bodyHandler {
-                msg.reply(String(it.bytes))
+        webClient.get(8888, "localhost", "/calc?i=$a").send {
+            if (it.succeeded()) {
+                println(it.result())
+                msg.reply(it.result().body().toString())
+            } else {
+                println(it.cause())
             }
-        }.end()
+        }
     }
 
 }
