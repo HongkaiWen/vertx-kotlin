@@ -3,7 +3,6 @@ package com.github.hongkaiwen.reactor.vk
 import com.github.hongkaiwen.reactor.vk.controller.calcVertx
 import com.github.hongkaiwen.reactor.vk.controller.counterStatics
 import com.github.hongkaiwen.reactor.vk.controller.studentVertx
-import com.github.hongkaiwen.reactor.vk.verticle.HttpClientVertcle
 import com.github.hongkaiwen.reactor.vk.verticle.TestVerticle
 import io.vertx.core.CompositeFuture
 import io.vertx.core.DeploymentOptions
