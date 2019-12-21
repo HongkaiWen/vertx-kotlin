@@ -30,7 +30,7 @@ class HttpClientVertcle : AbstractVerticle() {
     fun sendHttpRequest(a: Int) : Promise<String> {
         var promise = Promise.promise<String>()
 
-        webClient.get(8888, "127.0.0.1", "/calc?i=$a").send {
+        webClient.get(8888, "192.168.1.168", "/calc?i=$a").send {
             if (it.succeeded()) {
                 if(it.result().statusCode() != 200){
                     promise.fail("error code ${it.result().statusCode()}")
