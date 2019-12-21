@@ -4,7 +4,6 @@ import io.vertx.core.AbstractVerticle
 import io.vertx.core.Context
 import io.vertx.core.Promise
 import io.vertx.core.Vertx
-import io.vertx.core.eventbus.Message
 import io.vertx.ext.web.client.WebClient
 
 class HttpClientVertcle : AbstractVerticle() {
@@ -19,20 +18,34 @@ class HttpClientVertcle : AbstractVerticle() {
     override fun start(startPromise: Promise<Void>?) {
         var eb = vertx.eventBus()
         var mc = eb.consumer<Int>("hello")
-        mc.handler {
-            sendHttpRequest(it.body(), it)
+
+        mc.handler { message ->
+            sendHttpRequest(message.body()).future().apply { "result is $this" }
+                .onSuccess{ message.reply(it) }.onFailure { message.reply(it.message) }
         }
+
+
     }
 
-    fun sendHttpRequest(a: Int, msg: Message<Int>) {
-        webClient.get(8888, "localhost", "/calc?i=$a").send {
+    fun sendHttpRequest(a: Int) : Promise<String> {
+        var promise = Promise.promise<String>()
+
+        webClient.get(8888, "127.0.0.1", "/calc?i=$a").send {
             if (it.succeeded()) {
-                println(it.result())
-                msg.reply(it.result().body().toString())
+                if(it.result().statusCode() != 200){
+                    promise.fail("error code ${it.result().statusCode()}")
+                    println("not 200")
+                } else {
+                    promise.complete(it.result().bodyAsString())
+                    println("response ${it.result().bodyAsString()}")
+                }
             } else {
+                promise.fail(it.cause())
                 println(it.cause())
             }
         }
+
+        return promise
     }
 
 }

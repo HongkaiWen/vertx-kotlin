@@ -28,10 +28,6 @@ fun main() {
   vertx.deployVerticle("com.github.hongkaiwen.reactor.vk.verticle.HttpVerticle", DeploymentOptions().setInstances(2), server)
   vertx.deployVerticle(TestVerticle())
 
-  vertx.setPeriodic(1000){
-    vertx.eventBus().send("haha", "caca")
-  }
-
   println("event loop count ${vertx.nettyEventLoopGroup().count()}")
 
   counterStatics()

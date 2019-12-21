@@ -7,7 +7,6 @@ import com.github.hongkaiwen.reactor.vk.controller.preCalc
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Promise
 import io.vertx.ext.web.Router
-import io.vertx.ext.web.RoutingContext
 
 class HttpVerticle : AbstractVerticle() {
 
