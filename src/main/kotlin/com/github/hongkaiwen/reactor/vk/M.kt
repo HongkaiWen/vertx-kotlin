@@ -1,5 +1,8 @@
 package com.github.hongkaiwen.reactor.vk
 
+import com.github.hongkaiwen.reactor.vk.calc.CallbackVerticle
+import com.github.hongkaiwen.reactor.vk.calc.PromiseLineVerticle2
+import com.github.hongkaiwen.reactor.vk.calc.PromiseVerticle
 import com.github.hongkaiwen.reactor.vk.controller.calcVertx
 import com.github.hongkaiwen.reactor.vk.controller.counterStatics
 import com.github.hongkaiwen.reactor.vk.controller.studentVertx
@@ -27,6 +30,9 @@ fun main() {
   vertx.deployVerticle(HttpClientVertcle(), client)
   vertx.deployVerticle("com.github.hongkaiwen.reactor.vk.verticle.HttpVerticle", DeploymentOptions().setInstances(2), server)
   vertx.deployVerticle(TestVerticle())
+  vertx.deployVerticle(CallbackVerticle())
+  vertx.deployVerticle(PromiseVerticle())
+  vertx.deployVerticle(PromiseLineVerticle2())
 
   println("event loop count ${vertx.nettyEventLoopGroup().count()}")
 
