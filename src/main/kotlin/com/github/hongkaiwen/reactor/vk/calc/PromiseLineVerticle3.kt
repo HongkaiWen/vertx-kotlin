@@ -5,16 +5,15 @@ import io.vertx.core.Future
 import io.vertx.core.Promise
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.client.WebClient
+import java.lang.Exception
 
 
 /**
  * 通过promise方式来实现异步编排
  * a + (（b -c）+ d) -e -f + g
- *
- * 如果只是实现一级的调用，promise 比 callback，略有优势：
- * 类似这样：sub(b, c).future().onSuccess { s1 -> add(s1, d) }.onFailure(failerHandler)
- * 如果是多级的，vertx 的 promise是不支持的
- * 如果是多级的，就是reactive要解决的问题了吧
+ * 1. 通过vertx.core.promise实现promise模式
+ * 2. 通过promise.compose实现链式调用
+ * 3. 通过中缀函数实现一点骚气的操作
  *
  */
 class PromiseLineVerticle3 : AbstractVerticle(){
@@ -36,9 +35,7 @@ class PromiseLineVerticle3 : AbstractVerticle(){
             var f = msgBody.getInteger("f", 0)
             var g = msgBody.getInteger("g", 0)
 
-
-            var failerHandler : (Throwable) -> Unit = {msg.fail(500, it.message)}
-
+            //只要一个onFailure即可
             (b asyncSub c)
                 .compose { it asyncAdd d }
                 .compose { it asyncAdd a }
@@ -46,9 +43,11 @@ class PromiseLineVerticle3 : AbstractVerticle(){
                 .compose { it asyncSub f }
                 .compose { it asyncAdd g }
                 .onSuccess { msg.reply(it.toString()) }
-                .onFailure(failerHandler)
+                .onFailure{msg.fail(500, it.message)}
         }
     }
+
+
 
     infix fun Int.asyncAdd(input : Int) : Future<Int> {
         return calc(this, input, CalcOperator.add)
@@ -58,16 +57,24 @@ class PromiseLineVerticle3 : AbstractVerticle(){
         return calc(this, input, CalcOperator.sub)
     }
 
+    /**
+     * 所有异常必须被处理
+     */
     fun calc(a: Int, b: Int, operator: CalcOperator) : Future<Int> {
         var promise = Promise.promise<Int>()
 
         webClient.get(7777, "pi", "/${operator.name}?a=$a&b=$b").send{
             if (it.succeeded()) {
-                var addResult = it.result().bodyAsString().toInt()
-                promise.complete(addResult)
-                println("$a - $b = $addResult")
+                try{
+                    var addResult = it.result().bodyAsString().toInt()
+                    promise.complete(addResult)
+                    println("$a - $b = $addResult")
+                } catch (e: Exception) {
+                    promise.fail(e)
+                }
             } else {
-                promise.fail("calc failed $a add $it")
+                it.cause().printStackTrace()
+                promise.fail("calc failed $a add $b")
             }
         }
 
