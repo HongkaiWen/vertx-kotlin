@@ -1,21 +1,17 @@
 package com.github.hongkaiwen.reactor.vk.calc
 
 import io.vertx.core.AbstractVerticle
-import io.vertx.core.Future
 import io.vertx.core.Promise
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.client.WebClient
-import java.lang.Exception
-import java.lang.RuntimeException
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.CompletionException
 
 
 /**
  * 通过promise方式来实现异步编排
  * a + (（b -c）+ d) -e -f + g
- * 1. 通过vertx.core.promise实现promise模式
- * 2. 通过promise.compose实现链式调用
+ * 1. 通过CompletableFuture 实现 promise 模式
+ * 2. 通过promise.thenCompose 实现链式调用
  * 3. 通过中缀函数实现一点骚气的操作
  *
  */
@@ -28,7 +24,7 @@ class PromiseLineVerticle4 : AbstractVerticle(){
         webClient = WebClient.create(vertx)
 
         var eventBus = vertx.eventBus()
-        eventBus.consumer<JsonObject>("calc.promise.line3"){ msg ->
+        eventBus.consumer<JsonObject>("calc.promise.line4"){ msg ->
             var msgBody = msg.body()
             var a = msgBody.getInteger("a", 0)
             var b = msgBody.getInteger("b", 0)

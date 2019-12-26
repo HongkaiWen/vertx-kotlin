@@ -1,9 +1,6 @@
 package com.github.hongkaiwen.reactor.vk
 
-import com.github.hongkaiwen.reactor.vk.calc.CallbackVerticle
-import com.github.hongkaiwen.reactor.vk.calc.PromiseLineVerticle3
-import com.github.hongkaiwen.reactor.vk.calc.PromiseVerticle
-import com.github.hongkaiwen.reactor.vk.calc.SleepVerticle
+import com.github.hongkaiwen.reactor.vk.calc.*
 import com.github.hongkaiwen.reactor.vk.controller.calcVertx
 import com.github.hongkaiwen.reactor.vk.controller.counterStatics
 import com.github.hongkaiwen.reactor.vk.controller.studentVertx
@@ -34,6 +31,7 @@ fun main() {
   vertx.deployVerticle(CallbackVerticle())
   vertx.deployVerticle(PromiseVerticle())
   vertx.deployVerticle(PromiseLineVerticle3())
+  vertx.deployVerticle(PromiseLineVerticle4())
   vertx.deployVerticle(SleepVerticle())
 
   println("event loop count ${vertx.nettyEventLoopGroup().count()}")
