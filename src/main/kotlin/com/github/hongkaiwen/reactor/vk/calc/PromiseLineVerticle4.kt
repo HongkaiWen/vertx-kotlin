@@ -4,6 +4,7 @@ import io.vertx.core.AbstractVerticle
 import io.vertx.core.Promise
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.client.WebClient
+import io.vertx.ext.web.client.predicate.ResponsePredicate
 import java.util.concurrent.CompletableFuture
 
 
@@ -65,7 +66,8 @@ class PromiseLineVerticle4 : AbstractVerticle(){
     fun calc(a: Int, b: Int, operator: CalcOperator) : CompletableFuture<Int> {
         var promise = CompletableFuture<Int>()
 
-        webClient.get(7777, "pi", "/${operator.name}?a=$a&b=$b").send{
+        webClient.get(7777, "pi", "/${operator.name}?a=$a&b=$b")
+            .expect(ResponsePredicate.SC_OK).send{
             if (it.succeeded()) {
                 try{
                     var addResult = it.result().bodyAsString().toInt()
