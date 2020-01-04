@@ -24,6 +24,8 @@ dependencies {
     compile 'io.vertx:vertx-lang-kotlin-coroutines:3.8.4'
     compile 'io.vertx:vertx-reactive-streams:3.8.4'
     implementation 'io.projectreactor:reactor-core'
+    implementation 'io.vertx:vertx-lang-kotlin-coroutines:3.8.4'
+    implementation 'org.slf4j:slf4j-jdk14:1.7.21'
 }
 
 compileKotlin {
