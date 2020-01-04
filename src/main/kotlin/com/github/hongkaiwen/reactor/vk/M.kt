@@ -33,6 +33,7 @@ fun main() {
   vertx.deployVerticle(PromiseLineVerticle3())
   vertx.deployVerticle(PromiseLineVerticle4())
   vertx.deployVerticle(SleepVerticle())
+  vertx.deployVerticle(ReactorVerticle())
 
   println("event loop count ${vertx.nettyEventLoopGroup().count()}")
 

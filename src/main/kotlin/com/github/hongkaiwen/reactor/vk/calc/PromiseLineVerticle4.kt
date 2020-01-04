@@ -36,7 +36,15 @@ class PromiseLineVerticle4 : AbstractVerticle(){
             var g = msgBody.getInteger("g", 0)
 
 
-            (b asyncSub c)
+            (b asyncSub c).thenCompose {
+                    var promise = CompletableFuture<Int>()
+                    if(it > 5){
+                        promise.complete(it)
+                    } else {
+                        promise.complete(6)
+                    }
+                    promise
+                }
                 .thenCompose { it asyncAdd d }
                 .thenCompose { it asyncAdd a }
                 .thenCompose { it asyncSub e }

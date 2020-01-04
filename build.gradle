@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.3.60'
+    id "io.spring.dependency-management" version "1.0.7.RELEASE"
 }
 
 group 'com.github.hongkaiwen.reactor'
@@ -21,6 +22,8 @@ dependencies {
     compile 'io.vertx:vertx-redis-client:3.8.4'
     compile 'io.vertx:vertx-lang-kotlin:3.8.4'
     compile 'io.vertx:vertx-lang-kotlin-coroutines:3.8.4'
+    compile 'io.vertx:vertx-reactive-streams:3.8.4'
+    implementation 'io.projectreactor:reactor-core'
 }
 
 compileKotlin {
@@ -36,5 +39,11 @@ jar {
     }
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "io.projectreactor:reactor-bom:Bismuth-RELEASE"
     }
 }

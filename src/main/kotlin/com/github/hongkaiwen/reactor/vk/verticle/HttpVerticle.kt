@@ -34,7 +34,7 @@ class HttpVerticle : AbstractVerticle() {
             var g = it.request().getParam("g").toInt()
             var msg = JsonObject()
             msg.put("a", a).put("b", b).put("c", c).put("d", d).put("e", e).put("f", f).put("g", g)
-            eb.request<String>("calc.promise.line4", msg){ reply ->
+            eb.request<String>("calc.reactor", msg){ reply ->
                 if (reply.succeeded()){
                     it.request().response().end(reply?.result()?.body() ?: "no response")
                 } else {
